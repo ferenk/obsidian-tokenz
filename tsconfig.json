@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSourceMap": true,
+    "inlineSources": true,
+    "module": "ESNext",
+    "target": "ES6",
+    "allowJs": true,
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "isolatedModules": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noImplicitOverride": true,
+    //"noUnusedLocals": true,
+    "noUnusedLocals": false,
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "lib": [
+        "DOM",
+        "ES5",
+        "ES6",
+        "ES7",
+        "es2018"
+    ],
+    "skipLibCheck": true
+    },
+    "include": [
+        "**/*.ts"
+    ],
+    "exclude": [
+        "**/*.exclude*.ts",
+        "build*/",
+        "*-bak*",
+        "*.bak*"
+    ]
+}

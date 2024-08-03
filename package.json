@@ -1,0 +1,34 @@
+{
+    "name": "Tokenz",
+    "version": "0.0.1",
+    "description": "Helper to use smileys, emojis, quick snippets in Obsidian",
+    "main": "main.js",
+    "scripts": {
+        "dev": "node esbuild.config.mjs",
+        "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+        "version": "node version-bump.mjs && git add manifest.json versions.json",
+        
+        "syntax": "npm -s run syntax_silent",
+        "syntax_silent": "run-script-os",
+        "syntax_silent:win32": "@echo Syntax check... && tsc -noEmit && @echo Syntax check: Okay, no errors!",
+        "syntax_silent:linux": " echo Syntax check... && tsc -noEmit &&  echo Syntax check: Okay, no errors!"
+    },
+    "keywords": [],
+    "author": "Moricz, Ferenc",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/node": "^16.18.68",
+        "@typescript-eslint/eslint-plugin": "5.29.0",
+        "@typescript-eslint/parser": "5.29.0",
+        "esbuild": "^0.17.3",
+        "obsidian": "^1.6.6",
+        "run-script-os": "^1.1.6",
+        "tslib": "^2.2.0",
+        "typescript": "4.7.4"
+    },
+    "dependencies": {
+        "@codemirror/language": "^6.10.2",
+        "@codemirror/state": "^6.4.1",
+        "@codemirror/view": "^6.29.0"
+    }
+}
