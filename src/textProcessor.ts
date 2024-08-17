@@ -1,7 +1,15 @@
-import { smileyMap } from './smileyList';
+import { smileyMap, smileyList } from './smileyList';
 
 type Selection = [number, number] | null;
-type DecorateCB = (allText: string, range: [number, number], decoration: string | null) => string | null;
+type DecorateCB = (allText: string, range: [number, number], replacement: string | null, matchType: InputMatchType) => string | null;
+
+export enum InputMatchType
+{
+    None = 0,
+    Partial = 1,
+    PartialFromBeginning = 2,
+    Full = 4
+}
 
 export  class TextProcessor
 {
@@ -37,10 +45,10 @@ export  class TextProcessor
         //!console.log(`Token! [${match[0]}, ${match[1]}]`);
         const word = text.substring(match[0], match[1]+1);
         const replacedText: string | undefined = smileyMap.get(word);
+        const smileyEnd = match[1];
+        const smileyStart = match[0];
         if (replacedText)
         {
-            const smileyEnd = match[1];
-            const smileyStart = match[0];
             let decorate = true;
             if (selection)
             {
@@ -52,8 +60,18 @@ export  class TextProcessor
                 //console.log(`cursor/selection: [${selection[0]}, ${selection[1]}], smiley: [${smileyStart}, ${smileyEnd}], decorate: ${decorate}`);
             }
 
-            return decorateCB(text, [smileyStart, smileyEnd], (decorate ? replacedText : null));
+            return decorateCB(text, [smileyStart, smileyEnd], (decorate ? replacedText : null), InputMatchType.Full);
         }
-        return null;
+        else
+        {
+            let matchType = InputMatchType.None;
+            if (Object.keys(smileyList).filter((p: string) => p === word).length > 0)
+                matchType |= InputMatchType.Full;
+            if (Object.keys(smileyList).filter((p: string) => p.includes(word)).length > 0)
+                matchType |= InputMatchType.Partial;
+            if (Object.keys(smileyList).filter((p: string) => p.startsWith(word)).length > 0)
+                matchType |= InputMatchType.PartialFromBeginning;
+            return (matchType ? decorateCB(text, [smileyStart, smileyEnd], null, matchType) : null);
+        }
     }
 }

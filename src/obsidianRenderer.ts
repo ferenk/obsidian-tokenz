@@ -41,6 +41,6 @@ export default class ObsidianRenderer {
 
     static decorateWithReplaceCB(allText: string, range: [number, number], decoration: string | null): string | null
     {
-        return allText.substring(0, range[0]) + decoration + allText.substring(range[1]+1);
+        return (decoration ? allText.substring(0, range[0]) + decoration + allText.substring(range[1]+1) : null);
     }
 }
