@@ -50,7 +50,7 @@ class TokenReplacerWidget extends WidgetType
     }
 }
 
-class EmojiListPlugin implements PluginValue
+class CmRendererPlugin implements PluginValue
 {
     decorations: DecorationSet;
     textProcessor: TextProcessor;
@@ -98,11 +98,11 @@ class EmojiListPlugin implements PluginValue
     }
 }
 
-const pluginSpec: PluginSpec<EmojiListPlugin> = {
-    decorations: (value: EmojiListPlugin) => value.decorations,
+const pluginSpec: PluginSpec<CmRendererPlugin> = {
+    decorations: (value: CmRendererPlugin) => value.decorations,
 };
 
-export const emojiListPlugin = ViewPlugin.fromClass(
-    EmojiListPlugin,
+export const cmRendererPlugin = ViewPlugin.fromClass(
+    CmRendererPlugin,
     pluginSpec,
 );

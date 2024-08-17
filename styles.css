@@ -1,0 +1,8 @@
+.tz-suggester-container {
+  display: flex;
+  place-content: space-between;
+}
+
+.tz-key-shortcode {
+  margin-right: 8px;
+}
