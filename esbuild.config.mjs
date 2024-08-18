@@ -1,5 +1,6 @@
 import esbuild from "esbuild";
 import process from "process";
+import builtins from "builtin-modules";
 
 const banner =
 `/*
@@ -26,7 +27,8 @@ const context = await esbuild.context({
 		"@codemirror/lint",
 		"@codemirror/search",
 		"@codemirror/state",
-		"@codemirror/view"],
+		"@codemirror/view",
+	        ...builtins],
 	format: "cjs",
 	target: "es2018",
 	logLevel: "info",

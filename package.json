@@ -1,6 +1,6 @@
 {
-    "name": "Tokenz",
-    "version": "0.0.1",
+    "name": "tokenz",
+    "version": "0.5",
     "description": "Helper to use smileys, emojis, quick snippets in Obsidian",
     "main": "main.js",
     "scripts": {
@@ -23,12 +23,14 @@
         "esbuild": "^0.17.3",
         "obsidian": "^1.6.6",
         "run-script-os": "^1.1.6",
-        "tslib": "^2.2.0",
         "typescript": "4.7.4"
     },
     "dependencies": {
         "@codemirror/language": "^6.10.2",
         "@codemirror/state": "^6.4.1",
-        "@codemirror/view": "^6.29.0"
+        "@codemirror/view": "^6.29.0",
+        "builtin-modules": "^4.0.0",
+        "node": "^21.2.0",
+        "tslib": "^2.6.3"
     }
 }

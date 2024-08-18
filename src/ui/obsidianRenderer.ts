@@ -6,12 +6,10 @@ import
 import
 {
     TextProcessor,
-} from "./textProcessor";
+} from "../mapper/textProcessor";
 
-export default class ObsidianRenderer {
-    static readonly textProcessor: TextProcessor = new TextProcessor();
-    //public readonly view: EditorView;
-
+export default class ObsidianRenderer
+{
     static readonly processTokens: MarkdownPostProcessor = (el: HTMLElement) =>
     {
         this.processTokensForNode(el);
@@ -35,7 +33,7 @@ export default class ObsidianRenderer {
         {
             const strText = el.textContent;
             if (strText)
-                el.textContent = this.textProcessor.processAllTokens(strText, null, this.decorateWithReplaceCB);
+                el.textContent = TextProcessor.instance.processAllTokens(strText, null, this.decorateWithReplaceCB);
         }
     }
 

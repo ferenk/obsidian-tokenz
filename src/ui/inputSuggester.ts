@@ -1,15 +1,18 @@
 import { Plugin, EditorSuggest, Editor, EditorPosition, TFile, EditorSuggestTriggerInfo, EditorSuggestContext } from 'obsidian';
-import { smileyList } from './smileyList';
+import { CodeMaps } from '../mapper/codeMaps';
+
 
 export class InputSuggester extends EditorSuggest<string>
 {
     enabled: boolean;
     replace: boolean;
+    codeMaps: CodeMaps;
 
-    constructor(plugin: Plugin) {
+    constructor(plugin: Plugin, codeMaps: CodeMaps) {
         super(plugin.app);
         this.enabled = true;
         this.replace = false;
+        this.codeMaps = codeMaps;
     }
 
     onTrigger(cursor: EditorPosition, editor: Editor, _: TFile): EditorSuggestTriggerInfo | null {
@@ -55,18 +58,22 @@ export class InputSuggester extends EditorSuggest<string>
 
     getSuggestionsInternal(query: string)
     {
-        return Object.keys(smileyList).filter((p: string) => p.includes(query));
+        return this.codeMaps.filterValuesAll((p: string) => p.includes(query));
     }
 
-    renderSuggestion(suggestion: string, el: HTMLElement): void {
+    renderSuggestion(suggestion: string, el: HTMLElement): void
+    {
         const outer = el.createDiv({ cls: "tz-suggester-container" });
+        const value = this.codeMaps.getValueAll(suggestion);
         outer.createDiv({ cls: "tz-key-shortcode" }).setText(suggestion);
-        outer.createDiv({ cls: "tz-value-replacement" }).setText(smileyList[suggestion]);
+        outer.createDiv({ cls: "tz-value-replacement" }).setText(value ?? '?');
     }
 
     selectSuggestion(suggestion: string): void {
-        if(this.context) {
-            (this.context.editor as Editor).replaceRange(this.replace ? smileyList[suggestion] : `${suggestion} `, this.context.start, this.context.end);
+        if (this.context)
+        {
+            const value = this.codeMaps.getValueAll(suggestion);
+            (this.context.editor as Editor).replaceRange(this.replace ? value ?? '?' : `${suggestion} `, this.context.start, this.context.end);
         }
     }
 }

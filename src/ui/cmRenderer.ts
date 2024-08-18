@@ -25,7 +25,7 @@ import
 {
     TextProcessor,
     InputMatchType,
-} from "./textProcessor";
+} from "../mapper/textProcessor";
 
 class TokenReplacerWidget extends WidgetType
 {
@@ -51,16 +51,25 @@ class TokenReplacerWidget extends WidgetType
     }
 }
 
-class CmRendererPlugin implements PluginValue
+export class CmRendererPlugin implements PluginValue
 {
     decorations: DecorationSet;
-    textProcessor: TextProcessor;
-    //public readonly view: EditorView;
 
     constructor(view: EditorView)
     {
-        this.textProcessor = new TextProcessor();
         this.decorations = this.buildDecorations(view);
+    }
+
+    public static build()
+    {
+        const pluginSpec: PluginSpec<CmRendererPlugin> = {
+            decorations: (value: CmRendererPlugin) => value.decorations,
+        };
+
+        return ViewPlugin.fromClass(
+            CmRendererPlugin,
+            pluginSpec,
+        );
     }
 
     update(update: ViewUpdate)
@@ -83,7 +92,7 @@ class CmRendererPlugin implements PluginValue
             selection =  [view.state.selection.ranges[0].from, view.state.selection.ranges[0].to];
         }
 
-        this.textProcessor.processAllTokens(text.toString(), selection, this.addDecorationCB.bind(this, builder));
+        TextProcessor.instance.processAllTokens(text.toString(), selection, this.addDecorationCB.bind(this, builder));
 
         return builder.finish();
     }
@@ -108,12 +117,3 @@ class CmRendererPlugin implements PluginValue
         return null;
     }
 }
-
-const pluginSpec: PluginSpec<CmRendererPlugin> = {
-    decorations: (value: CmRendererPlugin) => value.decorations,
-};
-
-export const cmRendererPlugin = ViewPlugin.fromClass(
-    CmRendererPlugin,
-    pluginSpec,
-);

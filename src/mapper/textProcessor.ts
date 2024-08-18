@@ -1,4 +1,4 @@
-import { smileyMap, smileyList } from './smileyList';
+import { CodeMaps } from './codeMaps';
 
 type Selection = [number, number] | null;
 type DecorateCB = (allText: string, range: [number, number], replacement: string | null, matchType: InputMatchType) => string | null;
@@ -13,7 +13,26 @@ export enum InputMatchType
 
 export  class TextProcessor
 {
-    //private readonly tokenRegExp = /\s(\S+)[\s"]/g;
+    static #instance: TextProcessor;
+    // @ts-ignore next-line
+    codeMaps: CodeMaps;
+
+    private constructor() { }
+
+    public static get instance()
+    {
+        if (!TextProcessor.#instance)
+        {
+            TextProcessor.#instance = new TextProcessor();
+        }
+
+        return TextProcessor.#instance;
+    }
+
+    public setCodeMaps(codeMaps: CodeMaps)
+    {
+        this.codeMaps = codeMaps;
+    }
 
     processAllTokens(text: string, selection: Selection, decorateCB: DecorateCB) {
         const origText = text;
@@ -44,7 +63,7 @@ export  class TextProcessor
     {
         //!console.log(`Token! [${match[0]}, ${match[1]}]`);
         const word = text.substring(match[0], match[1]+1);
-        const replacedText: string | undefined = smileyMap.get(word);
+        const replacedText = this.codeMaps.getValueAll(word);
         const smileyEnd = match[1];
         const smileyStart = match[0];
         if (replacedText)
@@ -64,12 +83,13 @@ export  class TextProcessor
         }
         else
         {
+            const maps = this.codeMaps;
             let matchType = InputMatchType.None;
-            if (Object.keys(smileyList).filter((p: string) => p === word).length > 0)
+            if (this.codeMaps.filterValuesAll((p: string) => p === word).length > 0)
                 matchType |= InputMatchType.Full;
-            if (Object.keys(smileyList).filter((p: string) => p.includes(word)).length > 0)
+            if (this.codeMaps.filterValuesAll((p: string) => p.includes(word)).length > 0)
                 matchType |= InputMatchType.Partial;
-            if (Object.keys(smileyList).filter((p: string) => p.startsWith(word)).length > 0)
+            if (this.codeMaps.filterValuesAll((p: string) => p.startsWith(word)).length > 0)
                 matchType |= InputMatchType.PartialFromBeginning;
             return (matchType ? decorateCB(text, [smileyStart, smileyEnd], null, matchType) : null);
         }
