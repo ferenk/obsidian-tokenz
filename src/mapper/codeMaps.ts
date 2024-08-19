@@ -28,6 +28,12 @@ export class CodeMaps
                     {
                         const fileJsonObj = JSON.parse(fileContents);
                         console.log(`Map from file "${fileName}" loaded`);
+                        for (const code of Object.keys(fileJsonObj))
+                        {
+                            const value = fileJsonObj[code];
+                            if (typeof value === 'object' && value.constructor.name === 'Array')
+                                fileJsonObj[code] = value[0];
+                        }
                         this.codeMaps.push(fileJsonObj);
                         // console.log(`Parsed JSON: ${StringUtils.JSON_stringify_circular(fileJson)}`);
                     } catch (e)

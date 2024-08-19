@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-tokenz",
 	"name": "Tokenz",
-	"version": "0.5",
+	"version": "0.6",
 	"minAppVersion": "1.0.0",
 	"description": "Helper to use smileys, emojis, quick snippets in Obsidian",
 	"author": "Moricz, Ferenc",
