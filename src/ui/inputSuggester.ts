@@ -19,7 +19,6 @@ export class InputSuggester extends EditorSuggest<string>
         if (this.enabled)
         {
             const lineBeg = editor.getLine(cursor.line).substring(0, cursor.ch);
-            console.log('line: ' + lineBeg);
 
             let i: number;
             for(i = lineBeg.length - 1; i >= 0; i--)
@@ -34,7 +33,7 @@ export class InputSuggester extends EditorSuggest<string>
             if (match && match.length >= 1)
             {
                 const suggestions = this.getSuggestionsInternal(match);
-                console.log(`subStr match: ${match}, getSuggestionsInt: ${suggestions}`);
+                // debug console.log(`subStr match: ${match}, getSuggestionsInt: ${suggestions}`);
 
                 if (suggestions.length > 0) {
                     return {
@@ -73,7 +72,7 @@ export class InputSuggester extends EditorSuggest<string>
         if (this.context)
         {
             const value = this.codeMaps.getValueAll(suggestion);
-            (this.context.editor as Editor).replaceRange(this.replace ? value ?? '?' : `${suggestion} `, this.context.start, this.context.end);
+            this.context.editor.replaceRange(this.replace ? value ?? '?' : `${suggestion} `, this.context.start, this.context.end);
         }
     }
 }

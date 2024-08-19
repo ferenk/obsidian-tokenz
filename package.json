@@ -1,6 +1,6 @@
 {
     "name": "tokenz",
-    "version": "0.6",
+    "version": "0.6+",
     "description": "Helper to use smileys, emojis, quick snippets in Obsidian",
     "main": "main.js",
     "scripts": {

@@ -15,6 +15,6 @@ export default class TokenzPlugin extends Plugin
         this.registerEditorExtension(CmRendererPlugin.build());
         this.registerMarkdownPostProcessor(ObsidianRenderer.processTokens);
         this.registerEditorSuggest(new InputSuggester(this, codeMaps));
-        console.log("Obsidian Tokenz loaded!");
+        console.log("plugin: Fun Tokenz loaded!");
     }
 }

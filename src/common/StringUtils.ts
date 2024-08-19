@@ -7,7 +7,7 @@ export class StringUtils
             if (typeof value === 'object' && value !== null) {
                 if (cache?.includes(value)) {
                     // Circular reference found, discard key
-                    return;
+                    return '';
                 }
                 // Store value in our collection
                 cache?.push(value);

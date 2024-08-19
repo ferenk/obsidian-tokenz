@@ -13,7 +13,7 @@ export enum InputMatchType
 
 export  class TextProcessor
 {
-    static #instance: TextProcessor;
+    static #instance: TextProcessor;    // nosonar
     // @ts-ignore next-line
     codeMaps: CodeMaps;
 
@@ -55,13 +55,13 @@ export  class TextProcessor
             wasWS = isWS;
         }
         if (text !== origText)
-            console.log(`Text changed: ${origText}\r\n=>\r\n${text}`)
+            console.log(`plugin tokenz: Text changed, ${origText}\r\n=>\r\n${text}`)
         return text;
     }
 
-    processOneToken(text: string, match: [number, number], selection: [number, number] | null, decorateCB: DecorateCB)
+    processOneToken(text: string, match: [number, number], selection: [number, number] | null, decorateCB: DecorateCB): string | null
     {
-        //!console.log(`Token! [${match[0]}, ${match[1]}]`);
+        // debug console.log(`Token! [${match[0]}, ${match[1]}]`);
         const word = text.substring(match[0], match[1]+1);
         const replacedText = this.codeMaps.getValueAll(word);
         const smileyEnd = match[1];
