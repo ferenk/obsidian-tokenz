@@ -66,24 +66,11 @@ export  class TextProcessor
         const replacedText = this.codeMaps.getValueAll(word);
         const smileyEnd = match[1];
         const smileyStart = match[0];
-        if (replacedText)
-        {
-            let decorate = true;
-            if (selection)
-            {
-                // smiley's whole range is NOT within the current selection (start & end pos are both outside)
-                decorate &&= !(selection[0] <= smileyStart && smileyStart <= selection[1]);
-                decorate &&= !(selection[0] <= smileyEnd && smileyEnd <= selection[1]);
-                decorate &&= !(smileyStart <= selection[0] && selection[0] <= smileyEnd +1);
-                decorate &&= !(smileyStart <= selection[1] && selection[1] <= smileyEnd);
-                //console.log(`cursor/selection: [${selection[0]}, ${selection[1]}], smiley: [${smileyStart}, ${smileyEnd}], decorate: ${decorate}`);
-            }
 
-            return decorateCB(text, [smileyStart, smileyEnd], (decorate ? replacedText : null), InputMatchType.Full);
-        }
-        else
+        const overlap = this.doRangesOverlap(match, selection);
+
+        if (overlap)
         {
-            const maps = this.codeMaps;
             let matchType = InputMatchType.None;
             if (this.codeMaps.filterValuesAll((p: string) => p === word).length > 0)
                 matchType |= InputMatchType.Full;
@@ -93,5 +80,29 @@ export  class TextProcessor
                 matchType |= InputMatchType.PartialFromBeginning;
             return (matchType ? decorateCB(text, [smileyStart, smileyEnd], null, matchType) : null);
         }
+        else if (replacedText)
+        {
+            return decorateCB(text, [smileyStart, smileyEnd], replacedText, InputMatchType.Full);
+        }
+        return null;
+    }
+
+    doRangesOverlap(match: [number, number], selection: [number, number] | null)
+    {
+        let overlap = false;
+        const smileyEnd = match[1];
+        const smileyStart = match[0];
+
+        if (selection)
+        {
+            // smiley's whole range is NOT within the current selection (start & end pos are both outside)
+            overlap ||= selection[0] <= smileyStart && smileyStart <= selection[1];
+            overlap ||= selection[0] <= smileyEnd && smileyEnd <= selection[1];
+            overlap ||= smileyStart <= selection[0] && selection[0] <= smileyEnd + 1;
+            overlap ||= smileyStart <= selection[1] && selection[1] <= smileyEnd;
+            // debug console.log(`cursor/selection: [${selection[0]}, ${selection[1]}], smiley: [${smileyStart}, ${smileyEnd}], decorate: ${decorate}`);
+        }
+
+        return overlap;
     }
 }
