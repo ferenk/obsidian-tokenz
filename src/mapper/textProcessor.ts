@@ -1,4 +1,5 @@
 import { CodeMaps } from './codeMaps';
+import { Settings } from '../settings';
 
 type Selection = [number, number] | null;
 type DecorateCB = (allText: string, range: [number, number], replacement: string | null, matchType: InputMatchType) => string | null;
@@ -72,12 +73,19 @@ export  class TextProcessor
         if (overlap)
         {
             let matchType = InputMatchType.None;
-            if (this.codeMaps.filterValuesAll((p: string) => p === word).length > 0)
-                matchType |= InputMatchType.Full;
-            if (this.codeMaps.filterValuesAll((p: string) => p.includes(word)).length > 0)
-                matchType |= InputMatchType.Partial;
-            if (this.codeMaps.filterValuesAll((p: string) => p.startsWith(word)).length > 0)
-                matchType |= InputMatchType.PartialFromBeginning;
+            switch (Settings.instance.strEditorHighlightMode)
+            {
+                case 'flexible':    // nosonar
+                    if (this.codeMaps.filterValuesAll((p: string) => p.includes(word)).length > 0)
+                        matchType |= InputMatchType.Partial;
+                case 'completion':  // nosonar
+                    if (this.codeMaps.filterValuesAll((p: string) => p.startsWith(word)).length > 0)
+                        matchType |= InputMatchType.PartialFromBeginning;
+                case 'strict':
+                    if (this.codeMaps.filterValuesAll((p: string) => p === word).length > 0)
+                        matchType |= InputMatchType.Full;
+            }
+
             return (matchType ? decorateCB(text, [smileyStart, smileyEnd], null, matchType) : null);
         }
         else if (replacedText)

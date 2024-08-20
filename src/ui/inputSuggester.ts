@@ -1,22 +1,19 @@
 import { Plugin, EditorSuggest, Editor, EditorPosition, TFile, EditorSuggestTriggerInfo, EditorSuggestContext } from 'obsidian';
-import { CodeMaps } from '../mapper/codeMaps';
 
+import { CodeMaps } from '../mapper/codeMaps';
+import { Settings } from '../settings';
 
 export class InputSuggester extends EditorSuggest<string>
 {
-    enabled: boolean;
-    replace: boolean;
     codeMaps: CodeMaps;
 
     constructor(plugin: Plugin, codeMaps: CodeMaps) {
         super(plugin.app);
-        this.enabled = true;
-        this.replace = false;
         this.codeMaps = codeMaps;
     }
 
     onTrigger(cursor: EditorPosition, editor: Editor, _: TFile): EditorSuggestTriggerInfo | null {
-        if (this.enabled)
+        if (Settings.instance.bSuggestions)
         {
             const lineBeg = editor.getLine(cursor.line).substring(0, cursor.ch);
 
@@ -72,7 +69,7 @@ export class InputSuggester extends EditorSuggest<string>
         if (this.context)
         {
             const value = this.codeMaps.getValueAll(suggestion);
-            this.context.editor.replaceRange(this.replace ? value ?? '?' : `${suggestion} `, this.context.start, this.context.end);
+            this.context.editor.replaceRange(Settings.instance.bSuggestReplaceTokens ? value ?? '?' : `${suggestion} `, this.context.start, this.context.end);
         }
     }
 }

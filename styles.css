@@ -6,3 +6,7 @@
 .tz-key-shortcode {
   margin-right: 8px;
 }
+
+.tz-settings-disabled {
+  opacity: 0.5;
+}
