@@ -1,5 +1,7 @@
 import { App } from 'obsidian';
 
+import { Settings } from '../settings';
+
 export class CodeMaps
 {
     public codeMaps: Object[] = [];
@@ -77,18 +79,29 @@ export class CodeMaps
         return null;
     }
 
+    /**
+     * Filter values for the input suggester and the syntax highlighter
+     * @param predicateCB Filtering function
+     * @returns List of the filtered strings
+     */
     public filterValuesAll(predicateCB: (text: string) => boolean)
     {
         const allValues: string[] = [];
+        let addSeparator = false;
         for (const map of this.codeMaps)
         {
-            const value = Object.keys(map).filter(predicateCB);
-            if (value.length > 10)
+            if (addSeparator)
             {
-                allValues.push(...value.slice(0, 10));
-                break;
-            } else
-                allValues.push(...value);
+                allValues.push(Settings.instance.strSuggestionSeparator);
+                addSeparator = false;
+            }
+
+            const mapValuesFiltered = Object.keys(map).filter(predicateCB);
+            let mapValuesToAdd: string[] = mapValuesFiltered.slice(0, Settings.instance.nSuggestLimit);
+            allValues.push(...mapValuesToAdd);
+
+            if (mapValuesToAdd.length > 0)
+                addSeparator = true;
         }
         return allValues;
     }

@@ -18,5 +18,7 @@ export class Settings
 
     bSuggestions = true;
     bSuggestReplaceTokens = false;
+    nSuggestLimit = 30;
     strEditorHighlightMode = 'completion';
+    strSuggestionSeparator = '--------';
 }

@@ -75,10 +75,10 @@ export  class TextProcessor
             let matchType = InputMatchType.None;
             switch (Settings.instance.strEditorHighlightMode)
             {
-                case 'flexible':    // nosonar
+                case 'flexible':    // nosonar, break intentionally omitted
                     if (this.codeMaps.filterValuesAll((p: string) => p.includes(word)).length > 0)
                         matchType |= InputMatchType.Partial;
-                case 'completion':  // nosonar
+                case 'completion':  // nosonar, break intentionally omitted
                     if (this.codeMaps.filterValuesAll((p: string) => p.startsWith(word)).length > 0)
                         matchType |= InputMatchType.PartialFromBeginning;
                 case 'strict':

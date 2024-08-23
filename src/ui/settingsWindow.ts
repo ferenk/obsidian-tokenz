@@ -56,6 +56,26 @@ export class SettingsTab extends PluginSettingTab
                 .setClass('tz-settings-disabled')
                 .setDesc('Only available when "Show suggestions dropdown list" is enabled');
 
+        const settingSuggestionsLimit = new Setting(containerEl)
+            .setName('Limit number of suggested tokens')
+            .setDisabled(!Settings.instance.bSuggestions);
+        if (Settings.instance.bSuggestions)
+            settingSuggestionsLimit
+                .setDesc('Maximum number of suggestions to show in the dropdown list (per group; per code map)')
+                .addSlider((slider) => slider
+                    .setValue(Settings.instance.nSuggestLimit)
+                    .setDynamicTooltip()
+                    .setLimits(1, 100, 1)
+                    .onChange(async (value: number) =>
+                    {
+                        Settings.instance.nSuggestLimit = value;
+                        await this.saveSettings();
+                    }));
+        else
+            settingSuggestionsLimit
+                .setClass('tz-settings-disabled')
+                .setDesc('Only available when "Show suggestions dropdown list" is enabled');
+
         containerEl.createEl("h3", { text: 'Editing' });
         let currentModeDesc = 'Disabled: No highlighting';
         switch (Settings.instance.strEditorHighlightMode)

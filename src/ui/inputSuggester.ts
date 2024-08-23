@@ -77,16 +77,19 @@ export class InputSuggester extends EditorSuggest<string>
         const outer = el.createDiv({ cls: "tz-suggester-container" });
         const value = this.codeMaps.getValueAll(suggestion);
         outer.createDiv({ cls: "tz-key-shortcode" }).setText(suggestion);
-        outer.createDiv({ cls: "tz-value-replacement" }).setText(value ?? '?');
+        outer.createDiv({ cls: "tz-value-replacement" }).setText(value ?? '');
     }
 
     selectSuggestion(suggestion: string): void {
         if (this.context)
         {
             const value = this.codeMaps.getValueAll(suggestion);
-            const replaceStr = Settings.instance.bSuggestReplaceTokens ? value ?? '?' : suggestion + ' ';
-            this.context.editor.replaceRange(replaceStr, this.context.start, this.context.end);
-            this.context.editor.setCursor(this.context.start.line, this.context.start.ch + replaceStr.length);
+            if (suggestion != Settings.instance.strSuggestionSeparator)        // apply only when it's not a separator
+            {
+                const replaceStr = Settings.instance.bSuggestReplaceTokens ? value ?? '?' : suggestion + ' ';
+                this.context.editor.replaceRange(replaceStr, this.context.start, this.context.end);
+                this.context.editor.setCursor(this.context.start.line, this.context.start.ch + replaceStr.length);
+            }
         }
     }
 }
