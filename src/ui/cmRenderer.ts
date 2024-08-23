@@ -30,13 +30,13 @@ import
 class TokenReplacerWidget extends WidgetType
 {
     finalText = '-';
-    finalColor: string = '';
+    highlightClass: string = '';
 
     constructor(text: string, color = '')
     {
         super();
         this.finalText = text;
-        this.finalColor = color;
+        this.highlightClass = color;
     }
 
     toDOM(view: EditorView): HTMLElement
@@ -44,8 +44,10 @@ class TokenReplacerWidget extends WidgetType
         const div = document.createElement("span");
 
         div.innerText = this.finalText;
-        if (this.finalColor.length > 0)
-            div.style.color = this.finalColor;
+        if (this.highlightClass.length > 0)
+        {
+            div.classList.add(this.highlightClass);
+        }
 
         return div;
     }
@@ -104,15 +106,15 @@ export class CmRendererPlugin implements PluginValue
             builder.add(range[0], range[1] + 1, Decoration.replace({ widget: new TokenReplacerWidget(decoration) }));
         else if (matchType !== InputMatchType.None)
         {
-            let textColor = '';
+            let textClass = '';
             if (matchType & InputMatchType.Full)
-                textColor = 'hsl(42, 70%, 65%)';
+                textClass = 'tz-highlight1';
             else if (matchType & InputMatchType.PartialFromBeginning)
-                textColor = 'hsl(42, 55%, 55%)';
+                textClass = 'tz-highlight2';
             else if (matchType & InputMatchType.Partial)
-                textColor = 'hsl(42, 40%, 50%)';
+                textClass = 'tz-highlight3';
             for (let i = 0; i < range[1] - range [0] + 1; i++)
-                builder.add(range[0] + i, range[0] + i + 1, Decoration.replace({ widget: new TokenReplacerWidget(allText.substring(range[0] + i, range[0] + i + 1), textColor) }));
+                builder.add(range[0] + i, range[0] + i + 1, Decoration.replace({ widget: new TokenReplacerWidget(allText.substring(range[0] + i, range[0] + i + 1), textClass) }));
         }
         return null;
     }
