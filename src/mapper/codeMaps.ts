@@ -1,50 +1,67 @@
-import { App, FileSystemAdapter } from 'obsidian';
-
-import fs from 'fs';
-import path from 'path';
+import { App } from 'obsidian';
 
 export class CodeMaps
 {
     public codeMaps: Object[] = [];
 
-    public loadAll(app: App)
+    public async loadAll(app: App)
     {
-        const adapter = app.vault.adapter;
-        if (adapter instanceof FileSystemAdapter)
+        this.loadFile(app, 'maps.lst', (listFileContents: string) =>
         {
-            const pluginDataDir = path.resolve(adapter.getBasePath(), '.obsidian', 'plugins', 'obsidian-tokenz', 'data');
-            const filesList = fs.readdirSync(pluginDataDir);
-            for(const fileName of filesList)
+            console.log(`plugin tokenz: Code maps list loaded, processing...`);
+            const fileNames = listFileContents.split(/\r?\n/);
+            for (let i = 0; i < fileNames.length; i++)
             {
-                if (fileName.endsWith('.json'))
+                if (fileNames[i].trim().length > 0)
                 {
-                    this.loadCodeMap(pluginDataDir, fileName);
+                    console.log(`plugin tokenz: map #${i}: ${fileNames[i]}, loading...`);
+                    this.loadCodeMap(app, fileNames[i]);
                 }
             }
-        }
+        });
     }
 
-    private loadCodeMap(pluginDataDir: string, fileName: string)
+    private loadCodeMap(app: App, fileName: string)
     {
-        const filePath = path.resolve(pluginDataDir, fileName);
-        const fileContents = fs.readFileSync(filePath, 'utf8');
-        // debug console.log(`READ: ${fileContents}`);
-
-        try
+        const codeMapsRef = this.codeMaps;
+        this.loadFile(app, fileName, (jsonMapFileContents) =>
         {
-            const fileJsonObj = JSON.parse(fileContents);
-            console.log(`plugin tokenz: Map from file "${fileName}" loaded!`);
+            const fileJsonObj = JSON.parse(jsonMapFileContents);
+
+            // handle/replace values (only using the first item)
             for (const code of Object.keys(fileJsonObj))
             {
                 const value = fileJsonObj[code];
                 if (typeof value === 'object' && value.constructor.name === 'Array')
                     fileJsonObj[code] = value[0];
             }
-            // debug console.log(`Parsed JSON: ${StringUtils.jsonStringifyCircular(fileJsonObj)}`);
-            this.codeMaps.push(fileJsonObj);
+
+            codeMapsRef.push(fileJsonObj);
+        });
+    }
+
+    private async loadFile(app: App, fileName: string, cb: (fileName: string) => void)
+    {
+        const pluginDataDirRelative = `${app.vault.configDir}/plugins/obsidian-tokenz/data/${fileName}`;
+        const pluginDataResourceDir = app.vault.adapter.getResourcePath(pluginDataDirRelative).toString();
+
+        try
+        {
+            let blob = await fetch(pluginDataResourceDir).then(r => r.blob()).then(blobFile =>
+            {
+                const file = new File([blobFile], fileName);
+                const reader = new FileReader();
+
+                reader.onload = function ()
+                {
+                    console.log(`File: ${fileName} loaded!`);
+                    cb(reader.result as string);
+                };
+                reader.readAsText(file);
+            });
         } catch (e)
         {
-            console.error(`plugin tokenz: Exception while loading JSON while loading file "${fileName}": ${e}`);
+            console.error(`plugin tokenz: Error loading file: ${fileName}, ${e}`);
         }
     }
 
