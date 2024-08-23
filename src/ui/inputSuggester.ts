@@ -15,28 +15,34 @@ export class InputSuggester extends EditorSuggest<string>
     onTrigger(cursor: EditorPosition, editor: Editor, _: TFile): EditorSuggestTriggerInfo | null {
         if (Settings.instance.bSuggestions)
         {
-            const lineBeg = editor.getLine(cursor.line).substring(0, cursor.ch);
+            const line = editor.getLine(cursor.line);
+            const wsSet = new Set([' ', '\t', '\r', '\n']);
 
-            let i: number;
-            for(i = lineBeg.length - 1; i >= 0; i--)
-            {
-                const isWS = (lineBeg[i] === ' ' || lineBeg[i] === '\t' || lineBeg[i] === '\r' || lineBeg[i] === '\n');
-                if (isWS)
+            let beg: number, end: number;
+            for (beg = cursor.ch - 1; beg >= 0; beg--)
+                if (wsSet.has(line[beg]))
                     break;
-            }
-            const match = lineBeg.substring(i + 1);
+            for (end = cursor.ch; end < line.length; end++)
+                if (wsSet.has(line[end]))
+                    break;
 
             // get and show suggestions
-            if (match && match.length >= 1)
+            if (beg + 1 < end)
             {
+                const match = line.substring(beg + 1, end);
                 const suggestions = this.getSuggestionsInternal(match);
                 // debug console.log(`subStr match: ${match}, getSuggestionsInt: ${suggestions}`);
 
-                if (suggestions.length > 0) {
+                if (suggestions.length > 0)
+                {
+                    // debug console.log(`plugin tokenz: Suggestions for ${match} (beg: ${beg}, end: ${end})...`);
                     return {
-                        end: cursor,
                         start: {
-                            ch: cursor.ch - match.length,
+                            ch: beg + 1,
+                            line: cursor.line,
+                        },
+                        end: {
+                            ch: end,
                             line: cursor.line,
                         },
                         query: match,
@@ -52,9 +58,18 @@ export class InputSuggester extends EditorSuggest<string>
         return this.getSuggestionsInternal(context.query);
     }
 
-    getSuggestionsInternal(query: string)
+    getSuggestionsInternal(word: string)
     {
-        return this.codeMaps.filterValuesAll((p: string) => p.includes(query));
+        switch (Settings.instance.strEditorHighlightMode)
+        {
+            case 'flexible':
+                return (this.codeMaps.filterValuesAll((p: string) => p.includes(word)));
+            case 'completion':
+            case 'strict':      // there no point in returning 'hits' only once with only one element...
+                return (this.codeMaps.filterValuesAll((p: string) => p.startsWith(word)));
+        }
+
+        return this.codeMaps.filterValuesAll((p: string) => p.includes(word));
     }
 
     renderSuggestion(suggestion: string, el: HTMLElement): void
@@ -69,7 +84,9 @@ export class InputSuggester extends EditorSuggest<string>
         if (this.context)
         {
             const value = this.codeMaps.getValueAll(suggestion);
-            this.context.editor.replaceRange(Settings.instance.bSuggestReplaceTokens ? value ?? '?' : `${suggestion} `, this.context.start, this.context.end);
+            const replaceStr = Settings.instance.bSuggestReplaceTokens ? value ?? '?' : suggestion + ' ';
+            this.context.editor.replaceRange(replaceStr, this.context.start, this.context.end);
+            this.context.editor.setCursor(this.context.start.line, this.context.start.ch + replaceStr.length);
         }
     }
 }
