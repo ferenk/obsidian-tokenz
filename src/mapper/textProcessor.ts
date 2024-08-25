@@ -1,4 +1,4 @@
-import { CodeMaps } from './codeMaps';
+import { CodeMaps } from './codeMapsTs';
 import { Settings } from '../settings';
 
 type Selection = [number, number] | null;

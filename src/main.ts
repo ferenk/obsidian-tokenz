@@ -2,7 +2,7 @@ import { Plugin } from 'obsidian';
 
 import { Settings } from './settings';
 import { SettingsTab } from './ui/settingsWindow';
-import { CodeMaps } from './mapper/codeMaps';
+import { CodeMaps } from './mapper/codeMapsTs';
 
 import ObsidianRenderer from './ui/obsidianRenderer';
 import { CmRendererPlugin } from './ui/cmRenderer';

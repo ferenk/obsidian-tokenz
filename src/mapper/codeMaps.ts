@@ -30,7 +30,7 @@ export class CodeMaps
         {
             const fileJsonObj = JSON.parse(jsonMapFileContents);
 
-            // handle/replace values (only using the first item)
+            // handle/replace array values (only using the first item)
             for (const code of Object.keys(fileJsonObj))
             {
                 const value = fileJsonObj[code];
