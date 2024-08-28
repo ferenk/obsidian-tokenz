@@ -1,6 +1,6 @@
 import { Plugin, EditorSuggest, Editor, EditorPosition, TFile, EditorSuggestTriggerInfo, EditorSuggestContext } from 'obsidian';
 
-import { CodeMaps } from '../mapper/codeMapsTs';
+import { CodeMaps } from '../mapper/codeMaps';
 import { Settings } from '../settings';
 
 export class InputSuggester extends EditorSuggest<string>

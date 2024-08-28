@@ -1,12 +1,28 @@
 import { App } from 'obsidian';
 
 import { Settings } from '../settings';
+import { emoticons } from '../../data/emoticons';
+import { smileys } from '../../data/smileys';
 
 export class CodeMaps
 {
     public codeMaps: Object[] = [];
 
     public async loadAll(app: App)
+    {
+        this.loadAllFromCompiledData(app);
+        this.loadAllFromConfigFolder(app);
+    }
+
+    public async loadAllFromCompiledData(app: App)
+    {
+        this.processMapValues(smileys);
+
+        this.codeMaps.push(smileys);
+        this.codeMaps.push(emoticons);
+    }
+
+    public async loadAllFromConfigFolder(app: App)
     {
         this.loadFile(app, 'maps.lst', (listFileContents: string) =>
         {
@@ -29,17 +45,21 @@ export class CodeMaps
         this.loadFile(app, fileName, (jsonMapFileContents) =>
         {
             const fileJsonObj = JSON.parse(jsonMapFileContents);
-
-            // handle/replace array values (only using the first item)
-            for (const code of Object.keys(fileJsonObj))
-            {
-                const value = fileJsonObj[code];
-                if (typeof value === 'object' && value.constructor.name === 'Array')
-                    fileJsonObj[code] = value[0];
-            }
+            this.processMapValues(fileJsonObj);
 
             codeMapsRef.push(fileJsonObj);
         });
+    }
+
+    private processMapValues(mapObj: any)
+    {
+        // handle/replace array values (only using the first item)
+        for (const code of Object.keys(mapObj))
+        {
+            const value = mapObj[code];
+            if (typeof value === 'object' && value.constructor.name === 'Array')
+                mapObj[code] = value[0];
+        }
     }
 
     private async loadFile(app: App, fileName: string, cb: (fileName: string) => void)
