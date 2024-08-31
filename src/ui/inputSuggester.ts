@@ -84,7 +84,7 @@ export class InputSuggester extends EditorSuggest<string>
         if (this.context)
         {
             const value = this.codeMaps.getValueAll(suggestion);
-            if (suggestion != Settings.instance.strSuggestionSeparator)        // apply only when it's not a separator
+            if (suggestion !== Settings.instance.strSuggestionSeparator)        // apply only when it's not a separator
             {
                 const replaceStr = Settings.instance.bSuggestReplaceTokens ? value ?? '?' : suggestion + ' ';
                 this.context.editor.replaceRange(replaceStr, this.context.start, this.context.end);

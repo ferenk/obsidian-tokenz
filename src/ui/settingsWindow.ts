@@ -20,14 +20,11 @@ export class SettingsTab extends PluginSettingTab
 
         containerEl.empty();
 
-        containerEl.createEl("h1", { text: 'Tokenz Fun plugin settings' });
-        containerEl.createEl("div", { text: 'Insert tokens/shorts codes/shorts anywhere in you documents with ease!' });
-
-        containerEl.createEl("h3", { text: 'Suggestions' });
+        new Setting(containerEl).setName('Suggestions').setHeading();
         new Setting(containerEl)
             .setName('Show suggestions')
             .setDesc('While typing: If enabled, a dropdown list will appear ' +
-                'showing the actually matching tokens, if there\'s any. (Doesn\'t work on mobile)')
+                'showing the actually matching tokens, if there\'s any.')
             .addToggle((toggle) => toggle
                 .setValue(Settings.instance.bSuggestions)
                 .onChange(async (value: boolean) =>
@@ -76,7 +73,7 @@ export class SettingsTab extends PluginSettingTab
                 .setClass('tz-settings-disabled')
                 .setDesc('Only available when "Show suggestions dropdown list" is enabled');
 
-        containerEl.createEl("h3", { text: 'Editing' });
+        new Setting(containerEl).setName('Editing').setHeading();
         let currentModeDesc = 'Disabled: No highlighting';
         switch (Settings.instance.strEditorHighlightMode)
         {

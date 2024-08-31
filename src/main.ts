@@ -25,7 +25,12 @@ export default class TokenzPlugin extends Plugin
         this.registerMarkdownPostProcessor(ObsidianRenderer.processTokens);
         this.registerEditorSuggest(new InputSuggester(this, codeMaps));
 
-        console.log("plugin: Fun Tokenz loaded!");
+        console.log('Tokenz loaded!');
+    }
+
+    override onunload(): void
+    {
+        console.log('Tokenz unloaded!');
     }
 
     async loadSettings() {

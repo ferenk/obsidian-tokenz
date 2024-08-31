@@ -1,6 +1,6 @@
 export class StringUtils
 {
-    public static jsonStringifyCircular(obj: any)
+    public static jsonStringifyCircular(obj: Object)
     {
         let cache: unknown[] | null = [];
         const stringified = JSON.stringify(obj, (key, value) => {

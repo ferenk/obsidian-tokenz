@@ -36,7 +36,7 @@ export  class TextProcessor
     }
 
     processAllTokens(text: string, selection: Selection, decorateCB: DecorateCB) {
-        const origText = text;
+        //!const origText = text;
         let tokenBeg = -1, wasWS = true, i = -1;
         while (++i <= text.length)
         {
@@ -55,8 +55,8 @@ export  class TextProcessor
             }
             wasWS = isWS;
         }
-        if (text !== origText)
-            console.log(`plugin tokenz: Text changed, ${origText}\r\n=>\r\n${text}`)
+        // debug if (text !== origText)
+        // debug     console.log(`Text changed, ${origText}\r\n=>\r\n${text}`)
         return text;
     }
 
