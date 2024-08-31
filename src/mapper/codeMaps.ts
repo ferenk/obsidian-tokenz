@@ -1,22 +1,34 @@
-import { App } from 'obsidian';
+import { App, Plugin, normalizePath } from 'obsidian';
 
 import { Settings } from '../settings';
 import { emoticons } from '../../data/emoticons';
 import { smileys } from '../../data/smileys';
+// debug import { StringUtils } from 'src/common/StringUtils';
+
+const MAPS_FILENAME = 'maps.lst';
+const FILEDUMP_LENGTH = 200;
 
 export class CodeMaps
 {
     public codeMaps: Object[] = [];
+    private readonly plugin: Plugin;
+
+    public constructor(plugin: Plugin)
+    {
+        this.plugin = plugin;
+    }
 
     public async loadAll(app: App)
     {
         this.loadAllFromCompiledData(app);
-        this.loadAllFromConfigFolder(app);
+        await this.loadAllFromConfigFolder(app);
     }
 
-    public async loadAllFromCompiledData(app: App)
+    public loadAllFromCompiledData(app: App)
     {
-        this.processMapValues(smileys);
+        // all compiled data is already 'loaded', so there is no separate loading step
+        // 'smileys' has array values to hold extra data about the icons, so we need to process them
+        this.processComplexMapValues(smileys);
 
         this.codeMaps.push(smileys);
         this.codeMaps.push(emoticons);
@@ -24,34 +36,69 @@ export class CodeMaps
 
     public async loadAllFromConfigFolder(app: App)
     {
-        this.loadFile(app, 'maps.lst', (listFileContents: string) =>
+        // 1. load the mapsfile's list
+        //  logging is disabled here (no 3rd param) as it's a common case that 'maps.lst' isn't there
+        const listFileContents = await this.loadFile(app, MAPS_FILENAME);
+        if (listFileContents && listFileContents.trim().length > 0)
         {
-            console.log(`plugin tokenz: Code maps list loaded, processing...`);
+            // notify the user that he/she has put 'maps.lst' to the right place
+            console.log('Code map list loaded, processing...');
+
+            // 2. load all files listed in 'maps.lst'
             const fileNames = listFileContents.split(/\r?\n/);
             for (let i = 0; i < fileNames.length; i++)
             {
                 if (fileNames[i].trim().length > 0)
                 {
-                    console.log(`plugin tokenz: map #${i}: ${fileNames[i]}, loading...`);
-                    this.loadCodeMap(app, fileNames[i]);
+                    const loadResultMsgHeader = `Map file #${i + 1}: '${fileNames[i]}'`;
+                    try
+                    {
+                        if (await this.loadCodeMap(app, fileNames[i]))
+                            console.log(`${loadResultMsgHeader} loaded`);
+                    }
+                    catch (e)
+                    {
+                        console.error(`${loadResultMsgHeader}: ${e}`);
+                    }
                 }
             }
-        });
+        }
     }
 
-    private loadCodeMap(app: App, fileName: string)
+    /**
+     * Load and parse a code map file
+     * @param app Obsidian app instance
+     * @param fileName map file name
+     * @returns the parsed JSON object if the file was loaded successfully, otherwise null
+     * @throws SyntaxError if the JSON parsing fails
+     */
+    private async loadCodeMap(app: App, fileName: string)
     {
-        const codeMapsRef = this.codeMaps;
-        this.loadFile(app, fileName, (jsonMapFileContents) =>
+        // load the code map (and log errors as they are because of wrong file entries in 'maps.lst' made by the user)
+        const codeMapsContents = await this.loadFile(app, fileName, true);
+        if (codeMapsContents && codeMapsContents.trim().length > 0)
         {
-            const fileJsonObj = JSON.parse(jsonMapFileContents);
-            this.processMapValues(fileJsonObj);
+            try
+            {
+                const fileJsonObj = JSON.parse(codeMapsContents);
+                this.processComplexMapValues(fileJsonObj);
 
-            codeMapsRef.push(fileJsonObj);
-        });
+                this.codeMaps.push(fileJsonObj);
+            }
+            catch (e)
+            {
+                // rethrow the error with the file contents
+                const fileDump = codeMapsContents.substring(0, FILEDUMP_LENGTH);
+                throw new SyntaxError(
+                    `Error parsing JSON: ${e}\r\n` +
+                    `File contents (first ${FILEDUMP_LENGTH} chars):\r\n${fileDump}`);
+            }
+            return true;
+        }
+        return false;
     }
 
-    private processMapValues(mapObj: any)
+    private processComplexMapValues(mapObj: any)
     {
         // handle/replace array values (only using the first item)
         for (const code of Object.keys(mapObj))
@@ -62,29 +109,20 @@ export class CodeMaps
         }
     }
 
-    private async loadFile(app: App, fileName: string, cb: (fileName: string) => void)
+    private async loadFile(app: App, fileName: string, logErrors = false)
     {
-        const pluginDataDirRelative = `${app.vault.configDir}/plugins/obsidian-tokenz/data/${fileName}`;
-        const pluginDataResourceDir = app.vault.adapter.getResourcePath(pluginDataDirRelative).toString();
+        const pluginConfigPath = `${app.vault.configDir}/plugins/${this.plugin.manifest.id}`;
+        const filePath = normalizePath(`${pluginConfigPath}/data/${fileName}`);
 
         try
         {
-            let blob = await fetch(pluginDataResourceDir).then(r => r.blob()).then(blobFile =>
-            {
-                const file = new File([blobFile], fileName);
-                const reader = new FileReader();
-
-                reader.onload = function ()
-                {
-                    console.log(`File: ${fileName} loaded!`);
-                    cb(reader.result as string);
-                };
-                reader.readAsText(file);
-            });
+            return await app.vault.adapter.read(filePath);
         } catch (e)
         {
-            console.error(`plugin tokenz: Error loading file: ${fileName}, ${e}`);
+            if (logErrors)
+                console.error(`Error loading file: ${fileName}, ${e}`);
         }
+        return null;
     }
 
     public getValueAll(key: string): string | null
@@ -117,7 +155,7 @@ export class CodeMaps
             }
 
             const mapValuesFiltered = Object.keys(map).filter(predicateCB);
-            let mapValuesToAdd: string[] = mapValuesFiltered.slice(0, Settings.instance.nSuggestLimit);
+            const mapValuesToAdd: string[] = mapValuesFiltered.slice(0, Settings.instance.nSuggestLimit);
             allValues.push(...mapValuesToAdd);
 
             if (mapValuesToAdd.length > 0)

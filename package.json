@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "node esbuild.config.mjs",
         "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-        "package": "zip obsidian-tokenz manifest.json main.js README.md styles.css versions.json data/*.json data/*.lst",
+        "package": "zip tokenz manifest.json main.js README.md styles.css versions.json data/*.json data/*.lst",
         "version": "node version-bump.mjs && git add manifest.json versions.json",
         
         "syntax": "npm -s run syntax_silent",

@@ -15,7 +15,7 @@ export default class TokenzPlugin extends Plugin
     {
         // load core plugin modules
         await this.loadSettings();
-        const codeMaps = new CodeMaps();
+        const codeMaps = new CodeMaps(this);
         codeMaps.loadAll(this.app);
         this.addSettingTab(new SettingsTab(this.app, this, this.saveSettings.bind(this), Settings.instance));
 
