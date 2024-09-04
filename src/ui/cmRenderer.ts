@@ -29,27 +29,27 @@ import
 
 class TokenReplacerWidget extends WidgetType
 {
-    finalText = '-';
-    highlightClass: string = '';
+    text = '-';
+    cls: string = '';
 
-    constructor(text: string, color = '')
+    constructor(text: string, cls = '')
     {
         super();
-        this.finalText = text;
-        this.highlightClass = color;
+        this.text = text;
+        this.cls = cls;
     }
 
     toDOM(view: EditorView): HTMLElement
     {
-        const div = document.createElement("span");
+        const span = document.createElement('span');
 
-        div.innerText = this.finalText;
-        if (this.highlightClass.length > 0)
+        span.innerText = this.text;
+        if (this.cls.length > 0)
         {
-            div.classList.add(this.highlightClass);
+            span.classList.add(this.cls);
         }
 
-        return div;
+        return span;
     }
 }
 

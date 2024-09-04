@@ -111,7 +111,7 @@ export class CodeMaps
 
     private async loadFile(app: App, fileName: string, logErrors = false)
     {
-        const pluginConfigPath = `${app.vault.configDir}/plugins/${this.plugin.manifest.id}`;
+        const pluginConfigPath = this.plugin.manifest.dir;
         const filePath = normalizePath(`${pluginConfigPath}/data/${fileName}`);
 
         try

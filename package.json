@@ -1,14 +1,12 @@
 {
     "name": "tokenz",
     "version": "0.74",
-	"description": "Insert any type of short codes into your document. You can add smileys (:), ;), ...) or emojis (:smile:, :wink:, ...). More code maps will be added later. Even you, as a user can create your own.",
+	"description": "Insert shortcodes into your document, e.g smileys :) or emojis :wink: . User-defined short code maps are also supported.",
     "main": "main.js",
     "scripts": {
         "dev": "node esbuild.config.mjs",
         "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
-        "package": "zip tokenz manifest.json main.js README.md styles.css versions.json data/*.json data/*.lst",
-        "version": "node version-bump.mjs && git add manifest.json versions.json",
-        
+
         "syntax": "npm -s run syntax_silent",
         "syntax_silent": "run-script-os",
         "syntax_silent:win32": "@echo Syntax check... && tsc -noEmit && @echo Syntax check: Okay, no errors!",
