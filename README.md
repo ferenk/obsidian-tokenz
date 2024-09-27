@@ -6,8 +6,8 @@
   <h1>Obsidian / Tokenz</h1>
 </div>
 
-Use your favourite symbols, special characters and frequently used snippets with ease!
-You can insert it to your document using short code mappings:
+Use your favourite symbols, special characters and frequently used snippets with ease!  
+You can insert them to your document using short code mappings:
 
 - **Built-in** short code maps:  
 	- **emojis**, like ``:smile:`` 🙂 or ``:wink:`` 😉 (1800+ installed by default),  
