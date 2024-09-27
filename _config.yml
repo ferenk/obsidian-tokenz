@@ -1,6 +1,36 @@
-title: Tokenz (Obsidian plugin)
-description: Smileys, emoticons and any kind of short codes you can imagine
-show_downloads: true
+#####################
+# Site metadata
+title: Obsidian / Tokenz
+description: Smileys, emoticons or any type of short codes you create
+email: fmoricz@gmail.com
+author: ferenk
+copyright: "Ferenc Moricz, 2024"
+url: https://github.com/ferenk/github-tests
+# baseurl: https://github.com/ferenk/github-tests
+keywords: "obsidian, token, tokenz, token, shortcode, smiley, emoticon, github"
 google_analytics: GTM-T47R9MX8
-theme: jekyll-theme-leap-day
 google_site_verification: dSXyPF8wjboE3nlpS89FWsrFjURklLwimxdmIloilrk
+#####################
+# Jekyll theme config
+remote_theme: jeffreytse/jekyll-theme-yat
+show_downloads: true
+favicon: docs/img/tokenz_for_obsidian.ico
+banner:
+  image: "docs/img/tokenz_poster.jpg"
+header_transparent: true
+night_mode: "auto"
+yat:
+  date_format: "%Y-%m-%d %H:%M"
+lang: "en"
+sitemap: true
+theme_color: greenblue
+brand_color: orangered
+selection:
+  color: "#ff00ff"
+  background_color: "yellow"
+code_badge:
+  enabled: true
+defaults:
+  home:
+    heading: "Obsidian / Tokenz (plugin)"
+    subheading: "Smileys, emoticons / or even YOUR own short code map!"
