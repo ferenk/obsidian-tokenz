@@ -4,7 +4,7 @@ title: Obsidian / Tokenz
 description: Smileys, emoticons or any type of short codes you create
 email: fmoricz@gmail.com
 author: ferenk
-copyright: "Ferenc Moricz, 2024"
+copyright: "Ferenc Móricz, 2024"
 url: https://github.com/ferenk/github-tests
 # baseurl: https://github.com/ferenk/github-tests
 keywords: "obsidian, token, tokenz, token, shortcode, smiley, emoticon, github"
@@ -12,7 +12,7 @@ google_analytics: GTM-T47R9MX8
 google_site_verification: dSXyPF8wjboE3nlpS89FWsrFjURklLwimxdmIloilrk
 #####################
 # Jekyll theme config
-remote_theme: jeffreytse/jekyll-theme-yat
+remote_theme: jeffreytse/jekyll-theme-yat@gh-pages
 show_downloads: true
 favicon: docs/img/tokenz_for_obsidian.ico
 banner:

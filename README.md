@@ -1,8 +1,16 @@
-﻿<div align="center" class="not_on_gh-pages">
+﻿<div align="center" class="hide_on_gh-pages">
   <br>
   <a href="https://github.com/ferenk/obsidian-tokenz">
     <img alt="tokenz poster" src="https://ferenk.github.io/obsidian-tokenz/docs/img/tokenz_poster.jpg" width="830">
   </a>
+</div>
+<div>
+</div>
+<div style="text-align: center;">
+<img alt="GitHub manifest version" src="https://img.shields.io/github/manifest-json/v/ferenk/obsidian-tokenz?style=flat&logo=github" height=32px>
+<img alt="Obsidian downloads" src="https://img.shields.io/github/downloads/ferenk/obsidian-tokenz/main.js?style=flat&logo=obsidian" height=32px>
+</div>
+<div align="center" class="hide_on_gh-pages">
   <h1>Obsidian / Tokenz</h1>
 </div>
 
