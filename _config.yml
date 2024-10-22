@@ -2,6 +2,7 @@
 # Site metadata
 title: Obsidian / Tokenz
 description: Smileys, emoticons or any type of short codes you create
+repository: ferenk/obsidian-tokenz
 email: fmoricz@gmail.com
 author: ferenk
 copyright: "Ferenc Móricz, 2024"
@@ -12,8 +13,8 @@ google_analytics: GTM-T47R9MX8
 google_site_verification: dSXyPF8wjboE3nlpS89FWsrFjURklLwimxdmIloilrk
 #####################
 # Jekyll theme config
-remote_theme: jeffreytse/jekyll-theme-yat@gh-pages
-show_downloads: true
+remote_theme: pages-themes/architect@v0.2.0
+show_downloads: false
 favicon: docs/img/tokenz_for_obsidian.ico
 banner:
   image: "docs/img/tokenz_poster.jpg"

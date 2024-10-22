@@ -73,8 +73,8 @@ It's easy to define your own code maps. You can choose any format for your short
 
 And now you can insert these symbols to your document this way:
 
-| Format          | Short code example                           |   Result               |
-| --------------- | -------------------------------------------- | ---------------------- |
-| IRC style       | ``/prog-20 20%, /prog-50 /prog-90 90%``      | => ▎ 20%, ▋ 50%, █ 90% |
-| CSS class       | ``.idea, .success``                          | => 💡, 🏆              |
-| Any crazy style | ``\|tv_episode\|``                           | => 📺                  |
+| Format            | Short code example                           |   Result               |
+| ----------------- | -------------------------------------------- | ---------------------- |
+| IRC style         | ``/prog-20 20%, /prog-50 /prog-90 90%``      | => ▎ 20%, ▋ 50%, █ 90% |
+| CSS class         | ``.idea, .success``                          | => 💡, 🏆
+| Any "crazy" style | |``\tv_episode\``|                           | => 📺                  |
