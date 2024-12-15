@@ -1,4 +1,7 @@
-﻿<div align="center" class="hide_on_gh-pages">
+<head>
+  <link rel="canonical" href="https://obsidian-tokenz.ferenk.dev/" />
+</head>
+<div align="center" class="hide_on_gh-pages">
   <br>
   <a href="https://github.com/ferenk/obsidian-tokenz">
     <img alt="tokenz poster" src="https://ferenk.github.io/obsidian-tokenz/docs/img/tokenz_poster.jpg" width="830">
