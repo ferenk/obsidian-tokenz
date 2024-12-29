@@ -39,8 +39,18 @@ export class SettingsTab extends PluginSettingTab
             .setDisabled(!Settings.instance.bSuggestions);
         if (Settings.instance.bSuggestions)
             settingSuggestionsReplace
-                .setDesc('Replace the selected token with its matching icon. If enabled, the choosed token\'s icon ' +
-                    'will be inserted directly into the text instead of the the token\'s name.')
+                .setDesc(
+                createFragment(el => {
+                        el.appendText(
+                            'Replace the selected token with its matching icon. If enabled, the choosed token\'s icon ' +
+                            'will be inserted directly into the text instead of the the token\'s name.',
+                        );
+                        el.createEl("br");
+                        el.appendText(
+                            'This setting is also available on the status bar and from the Command palette, even by using hotkeys!',
+                        );
+                    }),
+                )
                 .addToggle((toggle) => toggle
                     .setValue(Settings.instance.bSuggestReplaceTokens)
                     .onChange(async (value: boolean) =>
