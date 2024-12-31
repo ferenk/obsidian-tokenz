@@ -7,6 +7,8 @@
         "dev": "node esbuild.config.mjs",
         "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
 
+        "test": "tsc --target es6 -m commonjs test/textProcessor.app.ts && node test/textProcessor.app.js",
+
         "syntax": "npm -s run syntax_silent",
         "syntax_silent": "run-script-os",
         "syntax_silent:win32": "@echo Syntax check... && tsc -noEmit && @echo Syntax check: Okay, no errors!",

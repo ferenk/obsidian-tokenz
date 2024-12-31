@@ -1,7 +1,9 @@
-import { CodeMaps } from './codeMaps';
 import { Settings } from '../settings';
 
-type Selection = [number, number] | null;
+import { CodeMaps } from './codeMaps';
+import { TextProcessorStateMachine, BlockParseState } from './textProcessorStateMachine';
+
+export type Selection = [number, number] | null;
 type DecorateCB = (allText: string, range: [number, number], replacement: string | null, matchType: InputMatchType) => string | null;
 
 export enum InputMatchType
@@ -12,11 +14,15 @@ export enum InputMatchType
     Full = 4
 }
 
-export  class TextProcessor
+export class TextProcessor
 {
     static #instance: TextProcessor;    // nosonar
     // @ts-ignore next-line
     codeMaps: CodeMaps;
+    textProcessStateMachine = new TextProcessorStateMachine();
+    // cached code block name set to speed up the block name matching
+    // (block name matching is currently executed for every characters of a block!)
+    codeBlockCache = new Map<string, boolean>();
 
     private constructor() { }
 
@@ -30,18 +36,86 @@ export  class TextProcessor
         return TextProcessor.#instance;
     }
 
+    /**
+     * "Hard" reset: Put everything back to its initial state (restart + clear the cache)
+     */
+    public init()
+    {
+        this.codeBlockCache.clear();
+        this.restart();
+    }
+
+    /**
+     * "Soft" reset: Prepares to process a new block
+     */
+    public restart()
+    {
+        this.textProcessStateMachine.restart();
+    }
+
+    public isBlockAccepted(blockName: string, blockNameRules: string): boolean
+    {
+        let accepted = this.isBlockAcceptedFromCache(blockName);
+
+        // block is not in the cache -> execute the rules for this block (and store the result in the cache)
+        if (accepted == null)
+        {
+            // process block name rules
+            blockNameRules = blockNameRules.replace(/\*/g, '.*').replace(/\?/g, '.');
+            accepted = true;
+            // go rule by rule
+            for (const rule of blockNameRules.split(','))
+            {
+                // remove the first character ('-' or '+')
+                const ruleText = rule.trim();
+                const blockNamePattern = `^${ruleText.substring(1)}$`;
+                console.log(`Processing rule!: '${rule}'-> '${blockNamePattern}', for string: '${blockName}'`);
+                if (!(new RegExp(blockNamePattern).test(blockName)))
+                    continue;
+                // we found a match - is it a negative or a positive rule? apply it!
+                accepted = ruleText.startsWith('+');
+            }
+            console.log(`Block type '${blockName}' was not in the cache! Processed, accepted: ${accepted}`);
+            // put the result into the cache
+            this.codeBlockCache.set(blockName, accepted);
+        }
+
+        return accepted;
+    }
+
+    private isBlockAcceptedFromCache(blockName: string): boolean | null
+    {
+        const blockInCache = this.codeBlockCache.get(blockName);
+        return blockInCache ?? null;
+    }
+
     public setCodeMaps(codeMaps: CodeMaps)
     {
         this.codeMaps = codeMaps;
     }
 
-    processAllTokens(text: string, selection: Selection, decorateCB: DecorateCB) {
-        //!const origText = text;
+    processAllBlockTokens(text: string, decorateCB: DecorateCB)
+    {
+        TextProcessor.instance.restart();
+        return this.processAllTokens(text, null, null, decorateCB);
+    }
+
+    processAllTokens(text: string, blockNameRules: string | null, selection: Selection, decorateCB: DecorateCB) {
         let tokenBeg = -1, wasWS = true, i = -1;
+        const parseSM = this.textProcessStateMachine;
         while (++i <= text.length)
         {
             const isWS = (i === text.length || text[i] === ' ' || text[i] === '\t' || text[i] === '\r' || text[i] === '\n');
-            if (wasWS && !isWS)
+            let bIsEnabledInBlock = true
+            let bIsEnabledOutBlock = true;
+            // parse code block if needed
+            if (blockNameRules != null)
+            {
+                parseSM.detectCodeBlocks(text[i], isWS);
+                bIsEnabledOutBlock = (parseSM.blockParseState === BlockParseState.OutBlock) && Settings.instance.bHighlightMainTokens;
+                bIsEnabledInBlock = (parseSM.blockParseState === BlockParseState.InBlock) && this.isBlockAccepted(parseSM.blockName, blockNameRules);
+            }
+            if (wasWS && !isWS && (bIsEnabledOutBlock || bIsEnabledInBlock))
                 tokenBeg = i;
             else if (tokenBeg >= 0 && isWS)
             {

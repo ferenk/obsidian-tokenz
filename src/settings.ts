@@ -21,4 +21,8 @@ export class Settings
     nSuggestLimit = 30;
     strEditorHighlightMode = 'completion';
     strSuggestionSeparator = '--------';
+    bHighlightMainTokens = true;
+    strHighlightCodeBlocks = 'enabled';
+    strHighlightCodeBlocksCustom = '+*';
+    strHighlightCodeBlocksSelected = '+*';
 }

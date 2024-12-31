@@ -1,3 +1,5 @@
+import { Settings } from '../settings';
+
 import
 {
     editorLivePreviewField,
@@ -76,6 +78,7 @@ export class CmRendererPlugin implements PluginValue
 
     update(update: ViewUpdate)
     {
+        //console.log(`update [ViewUpdate]: ${update.state.field(editorLivePreviewField)}`);
         // Disable in the source mode
         if (!update.state.field(editorLivePreviewField))
             this.decorations = Decoration.none;
@@ -94,7 +97,12 @@ export class CmRendererPlugin implements PluginValue
             selection =  [view.state.selection.ranges[0].from, view.state.selection.ranges[0].to];
         }
 
-        TextProcessor.instance.processAllTokens(text.toString(), selection, this.addDecorationCB.bind(this, builder));
+        TextProcessor.instance.restart();
+        TextProcessor.instance.processAllTokens(
+            text.toString(),
+            Settings.instance.strHighlightCodeBlocksSelected,
+            selection,
+            this.addDecorationCB.bind(this, builder));
 
         return builder.finish();
     }
