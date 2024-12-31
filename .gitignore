@@ -1,7 +1,14 @@
+# Obsidian files
+data.json
+
 # npm
 node_modules
 package-lock.json
 
 # build
-main.js
+#main.js
+.idea/
+.vscode/
+**/*.js
+**/*.dis
 *.js.map

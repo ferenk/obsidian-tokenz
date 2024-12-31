@@ -1,0 +1,7 @@
+{
+  "bSuggestions": true,
+  "bSuggestReplaceTokens": false,
+  "nSuggestLimit": 26,
+  "strEditorHighlightMode": "completion",
+  "strSuggestionSeparator": "--------"
+}

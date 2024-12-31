@@ -17,8 +17,10 @@ export default class ObsidianRenderer
 
     static processTokensForNode(el: HTMLElement)
     {
+        console.log(`processTokensForNode, el.tagName: ${el.tagName}`);
         if ((typeof el.tagName === "string") && (el.tagName.indexOf("CODE") !== -1 || el.tagName.indexOf("MJX") !== -1))
         {
+            console.log(`Skipping code block ${el.tagName}`);
             return;
         }
 
@@ -33,7 +35,9 @@ export default class ObsidianRenderer
         {
             const strText = el.textContent;
             if (strText)
-                el.textContent = TextProcessor.instance.processAllTokens(strText, null, this.decorateWithReplaceCB);
+                el.textContent = TextProcessor.instance.processAllBlockTokens(
+                    strText,
+                    this.decorateWithReplaceCB);
         }
     }
 
