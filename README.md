@@ -81,3 +81,14 @@ And now you can insert these symbols to your document this way:
 | IRC style         | ``/prog-20 20%, /prog-50 /prog-90 90%``      | => ▎ 20%, ▋ 50%, █ 90% |
 | CSS class         | ``.idea, .success``                          | => 💡, 🏆
 | Any "crazy" style | <code>|tv_episode|</code>                    | => 📺                  |
+
+### 3. Settings
+#### **Highlighting tokens in code blocks**
+It is enabled for all kind of code blocks by default, but you can fine-tune in the settings which code blocks should be highlighted.
+Format of the rulesets:
+```<rule1>,<rule2>,...```
+where a rule can be:
+```
+< + or - >wildcard for the block name
+```
+You can use the wildcard character ``*`` to match any character sequence (even "") and the ``?`` character to match any single character.
