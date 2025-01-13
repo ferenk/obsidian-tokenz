@@ -86,6 +86,7 @@ And now you can insert these symbols to your document this way:
 #### Highlighting
 Token text highlighting is enabled for all kind of code blocks by default, but you enable/disable block names with rulesets.
 Format of these rulesets:
+
 ```{+|-}<block name pattern>, ...```
 
 The rules are separated by commas, and all rules are applied in the order of appearance.
