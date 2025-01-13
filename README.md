@@ -83,12 +83,10 @@ And now you can insert these symbols to your document this way:
 | Any "crazy" style | <code>|tv_episode|</code>                    | => 📺                  |
 
 ### 3. Settings
-#### **Highlighting tokens in code blocks**
-It is enabled for all kind of code blocks by default, but you can fine-tune in the settings which code blocks should be highlighted.
-Format of the rulesets:
-```<rule1>,<rule2>,...```
-where a rule can be:
-```
-< + or - >wildcard for the block name
-```
+#### Highlighting
+Token text highlighting is enabled for all kind of code blocks by default, but you enable/disable block names with rulesets.
+Format of these rulesets:
+``{+|-}<block name pattern>, ...``
+The rules are separated by commas, and all rules are applied in the order of appearance.
 You can use the wildcard character ``*`` to match any character sequence (even "") and the ``?`` character to match any single character.
+
