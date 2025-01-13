@@ -86,7 +86,12 @@ And now you can insert these symbols to your document this way:
 #### Highlighting
 Token text highlighting is enabled for all kind of code blocks by default, but you enable/disable block names with rulesets.
 Format of these rulesets:
-``{+|-}<block name pattern>, ...``
+```{+|-}<block name pattern>, ...```
+
 The rules are separated by commas, and all rules are applied in the order of appearance.
 You can use the wildcard character ``*`` to match any character sequence (even "") and the ``?`` character to match any single character.
-
+Some samples:
+- ``+*``: Enable highlighting for all block names
+- ``-?*``: Only unnamed blocks will be highlighted
+- ``-*, +html``: Only html blocks are enabled
+- ``-*, +*js*``: Every block name containing "js" will be highlighted (e.g 'dataviewjs' blocks)
