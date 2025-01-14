@@ -108,4 +108,4 @@ And a final example with the explanation of how it is applied:
 2. ``+*js*`` - This rule re-enables highlighting for all block names containing "js"
 3. ``-*json*`` - This rule disables highlighting for all block names containing "json"
 
-So finally the empty block name will be <color red>disabled</color>, "javascript" will be disabled, "dataviewjs" will be enabled and "json" will be disabled.
+So finally the empty block name will be <span style="color: red">disabled</span>, "javascript" will be <span style="color: red">disabled</span>, "dataviewjs" will be <span style="color: green">enabled</span> and "json" will be <span style="color: red">disabled</span>.
