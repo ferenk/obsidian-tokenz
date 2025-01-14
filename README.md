@@ -103,9 +103,9 @@ And a final example with the explanation of how it is applied:
 
 0. (``+*``) - (Hidden rule)This is the default starting state, every evaluation starts with this. It enables highlighting for all block names.
   This is a practical starting state for negative rules.
-1. ``-*`` - You can use this rule to start with the opposite starting state. It is ideal for positive rules. Now all block names are disabled, even the empty ones.
+1. ``-*`` - You can use this rule to start with the opposite starting state. Now all block names are disabled, even the empty ones (use ``-?*`` to keep them enabled).
+  This is ideal for positive rules.
 2. ``+*js*`` - This rule re-enables highlighting for all block names containing "js"
 3. ``-*json*`` - This rule disables highlighting for all block names containing "json"
 
 So finally the empty block name will be <color red>disabled</color>, "javascript" will be disabled, "dataviewjs" will be enabled and "json" will be disabled.
-
