@@ -17,7 +17,7 @@
   <h1>Obsidian / Tokenz</h1>
 </div>
 
-Use your favourite symbols, special characters and frequently used snippets with ease!  
+Use your favourite icons, special characters and frequently used snippets with ease!  
 You can insert them to your document using short code mappings:
 
 - **Built-in** short code maps:  
@@ -84,28 +84,30 @@ And now you can insert these symbols to your document this way:
 
 ### 3. Settings
 #### Highlighting
-Token text highlighting is enabled for all kind of code blocks by default, but you enable/disable any sets of block names with rulesets.
-Format of these rulesets:
+Token text highlighting is enabled for all kind of code blocks by default, but you can enable/disable any sets of block names with *rulesets*.
+The format of these rulesets is:<br>
 ```{+|-}<block name pattern>, ...```
 
-The rules are separated by commas, and all rules are applied in the order of appearance.
+The rules are separated by commas and the rules are applied in the order of appearance.
 You can use the wildcard character ``*`` to match any character sequence (even "") and the ``?`` character to match any single character.
 Some examples:
 
 - ``+*``: Enable highlighting for all block names
-- ``-?*``: Disable highlighting for named blocks but still enable it for unnamed blocks (``?*`` means: a name with at least one character)
+- ``-?*``: Disable highlighting for named blocks but still enable it for unnamed blocks (``?*`` ensures that the length of the name is at least 1)
 - ``-*, +html``: Enable html block highlighting, all others are disabled
 - ``-*, +*js*``: Enable highlighting for all block names containing "js" (e.g 'dataviewjs' blocks), all others are disabled
 
-And a final example with the explanation of how it is applied:
+And a final example with an explanation of how it is applied:
 
-``-*, +*js*, -*json*``
+``-*, +*js*, +javascript, -*json*``
 
-0. (``+*``) - (Hidden rule)This is the default starting state, every evaluation starts with this. It enables highlighting for all block names.
-  This is a practical starting state for negative rules.
-1. ``-*`` - You can use this rule to start with the opposite starting state. Now all block names are disabled, even the empty ones (use ``-?*`` to keep them enabled).
+0. <i>(<font color="green"><tt> +* </tt></font>) (Hidden rule)</i><br>This is the default starting state, every evaluation starts with this. It enables highlighting for all block names.<br>This is a practical starting state for negative rules.
+1. <font color="red"><tt> -* </tt></font><br>You can start with this rule to have the opposite starting state. Now all block names are disabled, even the empty ones (use ``-?*`` to keep them enabled).<br>
   This is ideal for positive rules.
-2. ``+*js*`` - This rule re-enables highlighting for all block names containing "js"
-3. ``-*json*`` - This rule disables highlighting for all block names containing "json"
+2. <font color="green"><tt> +*js* </tt></font><br>This rule re-enables highlighting for all block names containing "js"
+3. <font color="green"><tt> +javascript </tt></font><br>Enable "javascript", too
+4. <font color="red"><tt> -*json* </tt></font><br>This rule disables highlighting for all block names containing "json"
 
-So finally the empty block name will be <span style="color: red">disabled</span>, "javascript" will be <span style="color: red">disabled</span>, "dataviewjs" will be <span style="color: green">enabled</span> and "json" will be <span style="color: red">disabled</span>.
+So as the result of this ruleset, the <font color="red">empty block name</font> will be *disabled*, <font color="green">"<b>js</b>"</font> and <font color="green">"dataview<b>js</b>"</font> (for example) will be *enabled*, <font color="green">"<b>javascript</b>"</font> will be *enabled*, too. But <font color="red">"<b>json</b>"</font> will be *disabled*.
+
+Note that the order of the rules matter. Rule 4 has to appear later than rule 2, because *\*json\** is more specific than *\*js\**. So the rule containing "js" would erase the effect of a previously applied rule containing "json".
