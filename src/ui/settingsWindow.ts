@@ -7,12 +7,14 @@ export class SettingsTab extends PluginSettingTab
 {
     plugin: Plugin;
     saveSettings: () => Promise<void>;
+    settings: Settings;
 
     constructor(app: App, plugin: Plugin, saveSettings: () => Promise<void>, settings: Settings)
     {
         super(app, plugin);
         this.plugin = plugin;
         this.saveSettings = saveSettings;
+        this.settings = settings;
     }
 
     display(): void
@@ -26,18 +28,18 @@ export class SettingsTab extends PluginSettingTab
             .setName('Show suggestions while typing')
             .setDesc('If enabled, a dropdown list will appear showing the actually matching tokens, if there\'s any.')
             .addToggle((toggle) => toggle
-                .setValue(Settings.instance.bSuggestions)
+                .setValue(this.settings.bSuggestions)
                 .onChange(async (value: boolean) =>
                 {
-                    Settings.instance.bSuggestions = value;
+                    this.settings.bSuggestions = value;
                     await this.saveSettings();
                     this.display();
                 }));
 
         const settingSuggestionsReplace = new Setting(containerEl)
             .setName('Insert the icon of the selected token instead of its text')
-            .setDisabled(!Settings.instance.bSuggestions);
-        if (Settings.instance.bSuggestions)
+            .setDisabled(!this.settings.bSuggestions);
+        if (this.settings.bSuggestions)
             settingSuggestionsReplace
                 .setDesc(
                 createFragment(el => {
@@ -51,10 +53,10 @@ export class SettingsTab extends PluginSettingTab
                     }),
                 )
                 .addToggle((toggle) => toggle
-                    .setValue(Settings.instance.bSuggestReplaceTokens)
+                    .setValue(this.settings.bSuggestReplaceTokens)
                     .onChange(async (value: boolean) =>
                     {
-                        Settings.instance.bSuggestReplaceTokens = value;
+                        this.settings.bSuggestReplaceTokens = value;
                         await this.saveSettings();
                     }));
         else
@@ -64,17 +66,17 @@ export class SettingsTab extends PluginSettingTab
 
         const settingSuggestionsLimit = new Setting(containerEl)
             .setName('Limit number of suggested tokens')
-            .setDisabled(!Settings.instance.bSuggestions);
-        if (Settings.instance.bSuggestions)
+            .setDisabled(!this.settings.bSuggestions);
+        if (this.settings.bSuggestions)
             settingSuggestionsLimit
                 .setDesc('Maximum number of suggestions to show in the dropdown list (per group; per code map)')
                 .addSlider((slider) => slider
-                    .setValue(Settings.instance.nSuggestLimit)
+                    .setValue(this.settings.nSuggestLimit)
                     .setDynamicTooltip()
                     .setLimits(1, 100, 1)
                     .onChange(async (value: number) =>
                     {
-                        Settings.instance.nSuggestLimit = value;
+                        this.settings.nSuggestLimit = value;
                         await this.saveSettings();
                     }));
         else
@@ -88,10 +90,10 @@ export class SettingsTab extends PluginSettingTab
             .setName('- In the document\'s body')
             .setDesc('Highlight tokens throughout the document, except in code blocks.')
             .addToggle((toggle) => toggle
-                .setValue(Settings.instance.bHighlightMainTokens)
+                .setValue(this.settings.bHighlightMainTokens)
                 .onChange(async (value: boolean) =>
                 {
-                    Settings.instance.bHighlightMainTokens = value;
+                    this.settings.bHighlightMainTokens = value;
                     await this.saveSettings();
                     this.display();
                 }));
@@ -122,16 +124,16 @@ export class SettingsTab extends PluginSettingTab
             {
                 text
                     .setPlaceholder('Write your own custom rule here!')
-                    .setDisabled(Settings.instance.strHighlightCodeBlocks !== 'custom')
-                    .setValue(Settings.instance.strHighlightCodeBlocksSelected)
+                    .setDisabled(this.settings.strHighlightCodeBlocks !== 'custom')
+                    .setValue(this.settings.strHighlightCodeBlocksSelected)
                     .onChange(async (value: string) =>
                     {
-                        Settings.instance.strHighlightCodeBlocksCustom = value;
-                        Settings.instance.strHighlightCodeBlocksSelected = value;
+                        this.settings.strHighlightCodeBlocksCustom = value;
+                        this.settings.strHighlightCodeBlocksSelected = value;
                         await this.saveSettings();
                         TextProcessor.instance.init();
                     });
-                text.inputEl.style.opacity = Settings.instance.strHighlightCodeBlocks === 'custom' ? '1' : '0.5';
+                text.inputEl.style.opacity = this.settings.strHighlightCodeBlocks === 'custom' ? '1' : '0.5';
                 // disable multi line input
                 text.inputEl.rows = 1;
                 text.inputEl.onkeydown = (event: KeyboardEvent) =>
@@ -150,28 +152,28 @@ export class SettingsTab extends PluginSettingTab
                     'custom': 'Custom ruleset',
                     'disabled': 'Disabled in all blocks',
                 })
-                .setValue(Settings.instance.strHighlightCodeBlocks)
+                .setValue(this.settings.strHighlightCodeBlocks)
                 .onChange(async (value: string) =>
                 {
-                    Settings.instance.strHighlightCodeBlocks = value;
+                    this.settings.strHighlightCodeBlocks = value;
                     if (value === 'custom')
                     {
-                        Settings.instance.strHighlightCodeBlocksSelected = Settings.instance.strHighlightCodeBlocksCustom;
+                        this.settings.strHighlightCodeBlocksSelected = this.settings.strHighlightCodeBlocksCustom;
                     }
                     else
                     {
-                        Settings.instance.strHighlightCodeBlocksSelected = defaultCodeBlockRules.get(value) ?? '-';
+                        this.settings.strHighlightCodeBlocksSelected = defaultCodeBlockRules.get(value) ?? '-';
                     }
                     await this.saveSettings();
                     TextProcessor.instance.init();
                     this.display();
-                    console.log(`custom setting: ${JSON.stringify(Settings.instance.strHighlightCodeBlocksCustom)}`);
+                    //console.log(`Tokenz: Custom setting: ${JSON.stringify(this.settings.strHighlightCodeBlocksCustom)}`);
                 }),
             );
 
         new Setting(containerEl).setName('Editing').setHeading();
         let currentModeDesc = 'Disabled: No highlighting';
-        switch (Settings.instance.strEditorHighlightMode)
+        switch (this.settings.strEditorHighlightMode)
         {
             case 'flexible': currentModeDesc = 'Flexible mode: Highlight if any part of a token is entered. E.g. "mile" matches ":smile:"'; break;
             case 'completion': currentModeDesc = 'Completion mode (Suggested): Highlight if the beginning of a token is entered. E.g. ":smi" matches ":smile:"'; break;
@@ -188,10 +190,10 @@ export class SettingsTab extends PluginSettingTab
                     'strict': 'Strict mode',
                     'disabled': 'Disabled',
                 })
-                .setValue(Settings.instance.strEditorHighlightMode)
+                .setValue(this.settings.strEditorHighlightMode)
                 .onChange(async (value: string) =>
                 {
-                    Settings.instance.strEditorHighlightMode = value;
+                    this.settings.strEditorHighlightMode = value;
                     await this.saveSettings();
                     this.display();
                 }));

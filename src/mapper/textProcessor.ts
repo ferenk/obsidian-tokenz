@@ -69,13 +69,13 @@ export class TextProcessor
                 // remove the first character ('-' or '+')
                 const ruleText = rule.trim();
                 const blockNamePattern = `^${ruleText.substring(1)}$`;
-                console.log(`Processing rule!: '${rule}'-> '${blockNamePattern}', for string: '${blockName}'`);
+                //console.log(`Processing rule!: '${rule}'-> '${blockNamePattern}', for string: '${blockName}'`);
                 if (!(new RegExp(blockNamePattern).test(blockName)))
                     continue;
                 // we found a match - is it a negative or a positive rule? apply it!
                 accepted = ruleText.startsWith('+');
             }
-            console.log(`Block type '${blockName}' was not in the cache! Processed, accepted: ${accepted}`);
+            //console.log(`Block type '${blockName}' was not in the cache! Processed, accepted: ${accepted}`);
             // put the result into the cache
             this.codeBlockCache.set(blockName, accepted);
         }

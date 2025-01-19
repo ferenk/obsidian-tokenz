@@ -42,7 +42,7 @@ export class CodeMaps
         if (listFileContents && listFileContents.trim().length > 0)
         {
             // notify the user that he/she has put 'maps.lst' to the right place
-            console.log('Code map list loaded, processing...');
+            console.log('Tokenz: Code map list loaded, processing...');
 
             // 2. load all files listed in 'maps.lst'
             const fileNames = listFileContents.split(/\r?\n/);
@@ -54,7 +54,7 @@ export class CodeMaps
                     try
                     {
                         if (await this.loadCodeMap(app, fileNames[i]))
-                            console.log(`${loadResultMsgHeader} loaded`);
+                            console.log(`Tokenz: ${loadResultMsgHeader} loaded`);
                     }
                     catch (e)
                     {

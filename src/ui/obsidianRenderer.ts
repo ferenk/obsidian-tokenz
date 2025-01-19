@@ -17,10 +17,10 @@ export default class ObsidianRenderer
 
     static processTokensForNode(el: HTMLElement)
     {
-        console.log(`processTokensForNode, el.tagName: ${el.tagName}`);
+        //console.log(`processTokensForNode, el.tagName: ${el.tagName}`);
         if ((typeof el.tagName === "string") && (el.tagName.indexOf("CODE") !== -1 || el.tagName.indexOf("MJX") !== -1))
         {
-            console.log(`Skipping code block ${el.tagName}`);
+            //console.log(`Tokenz: Skipping code block ${el.tagName}`);
             return;
         }
 

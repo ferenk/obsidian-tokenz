@@ -37,6 +37,7 @@ export default class TokenzPlugin extends Plugin
             'click', () =>
         {
             this.refreshStatusBar(!Settings.instance.bSuggestReplaceTokens);
+            this.saveSettings();
         });
         this.refreshStatusBar();
 
@@ -47,6 +48,7 @@ export default class TokenzPlugin extends Plugin
             callback: () =>
             {
                 this.refreshStatusBar(!Settings.instance.bSuggestReplaceTokens);
+                this.saveSettings();
             },
         });
     }
@@ -58,7 +60,6 @@ export default class TokenzPlugin extends Plugin
             Settings.instance.bSuggestReplaceTokens = suggestReplaceTokens;
             new Notice(`Tokenz: suggestions now insert ${suggestReplaceTokens ? 'symbols 🙂' : 'short codes :-)'}`);
         }
-        this.saveSettings();
 
         if (this.statusBarItemEl == null)
         {
@@ -84,8 +85,11 @@ export default class TokenzPlugin extends Plugin
         Settings.instance = { ...Settings.instance, ...await this.loadData() };
     }
 
-    async saveSettings() {
+    saveSettingsCounter = 0;
+    async saveSettings()
+    {
         await this.saveData(Settings.instance);
+        console.log(`Tokenz: Settings #${++this.saveSettingsCounter} saved.`);
         this.refreshStatusBar();
     }
 }
