@@ -1,6 +1,6 @@
 {
     "name": "tokenz",
-    "version": "0.8",
+    "version": "0.8.1",
     "description": "Insert shortcodes into your document, e.g smileys :) or emojis :wink: . User-defined short code maps are also supported.",
     "main": "main.js",
     "scripts": {
